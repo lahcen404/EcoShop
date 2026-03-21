@@ -1,0 +1,54 @@
+services:
+
+
+  ecoshop_app:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    container_name: ecoshop_app
+    user: "1000:1000"
+    volumes:
+      - "${LOCAL_PATH}:/var/www/html"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+
+  nginx:
+    image: nginx:alpine
+    container_name: ecoshop_nginx
+    ports:
+      - "${PHP_PORT}:80"
+    volumes:
+      - "${LOCAL_PATH}:/var/www/html"
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - ecoshop_app
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: ecoshop_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - pgtables:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:snapshot
+    container_name: ecoshop_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "${PGADMIN_EMAIL}"
+      PGADMIN_DEFAULT_PASSWORD: "${PGADMIN_PASSWORD}"
+    ports:
+      - "${PGADMIN_PORT}:80"
+    depends_on:
+      - postgres
+
+volumes:
+  pgtables:
