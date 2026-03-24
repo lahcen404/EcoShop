@@ -20,6 +20,7 @@ test('new users can register as a customer', function () {
         'email' => $email,
         'role'  => UserRole::CUSTOMER->value,
     ]);
+    
 
     // cheeck user data
     $user = User::where('email', $email)->first();
