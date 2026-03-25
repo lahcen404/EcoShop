@@ -8,7 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 
 class UpdateProductStock implements ShouldQueue
 {
-
+    use InteractsWithQueue;
 
     public function handle(OrderPlaced $event): void
     {

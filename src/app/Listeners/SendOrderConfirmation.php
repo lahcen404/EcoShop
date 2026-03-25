@@ -3,24 +3,17 @@
 namespace App\Listeners;
 
 use App\Events\OrderPlaced;
+use App\Mail\OrderConfirmedMail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Mail;
 
-class SendOrderConfirmation
+class SendOrderConfirmation implements ShouldQueue
 {
-    /**
-     * Create the event listener.
-     */
-    public function __construct()
-    {
-        //
-    }
+    use InteractsWithQueue;
 
-    /**
-     * Handle the event.
-     */
     public function handle(OrderPlaced $event): void
     {
-        //
+        Mail::to($event->order->user->email)->queue(new OrderConfirmedMail($event->order));
     }
 }
