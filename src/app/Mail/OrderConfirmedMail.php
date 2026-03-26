@@ -12,16 +12,14 @@ class OrderConfirmedMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    // 1. Define a public property. Laravel automatically sends this to the Blade view!
     public $order;
 
-    // 2. Accept the Order model when this class is created
     public function __construct(Order $order)
     {
         $this->order = $order;
     }
 
-    // 3. Set the Subject of the Email
+    // subject
     public function envelope(): Envelope
     {
         return new Envelope(
@@ -29,7 +27,7 @@ class OrderConfirmedMail extends Mailable
         );
     }
 
-    // 4. Tell Laravel which template to use
+    // content
     public function content(): Content
     {
         return new Content(
