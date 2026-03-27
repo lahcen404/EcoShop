@@ -12,8 +12,8 @@ Route::get('/profile', [AuthController::class, 'profile'])->middleware('auth:san
 
 
 // Public Routes
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:auth');
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:auth');
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::get('/products', [ProductController::class, 'index']);
@@ -21,7 +21,7 @@ Route::get('/products/{product}', [ProductController::class, 'show']);
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{category}', [CategoryController::class, 'show']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum','throttle:api')->group(function () {
     Route::post('/products', [ProductController::class, 'store']);
     Route::put('/products/{product}', [ProductController::class, 'update']);
     Route::delete('/products/{product}', [ProductController::class, 'destroy']);
