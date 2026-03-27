@@ -81,3 +81,24 @@ test('cannot place order with insufficient stock', function () {
     expect(Order::query()->count())->toBe(0);
     expect(OrderItem::query()->count())->toBe(0);
 });
+
+test('admin can view all orders', function () {
+    $admin = User::factory()->create(['role' => UserRole::ADMIN]);
+    Sanctum::actingAs($admin);
+
+    Order::factory()->count(3)->create();
+
+    $response = $this->getJson('/api/orders');
+
+    $response->assertOk()
+        ->assertJsonCount(3, 'data');
+});
+
+test('customer cannot view all orders', function () {
+    $customer = User::factory()->create(['role' => UserRole::CUSTOMER]);
+    Sanctum::actingAs($customer);
+
+    $response = $this->getJson('/api/orders');
+
+    $response->assertForbidden();
+});
