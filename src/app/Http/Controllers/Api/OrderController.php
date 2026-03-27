@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enums\OrderStatus;
+use App\Enums\UserRole;
 use App\Events\OrderPlaced;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
@@ -58,5 +59,17 @@ class OrderController extends Controller
         });
 
         return response()->json($order->load('items.product'), 201);
+    }
+
+    // Admiin Ordeers
+    public function index(Request $request): JsonResponse
+    {
+        if ($request->user()->role !== UserRole::ADMIN) {
+            return response()->json(['message' => 'Unauthorized.'], 403);
+        }
+
+        $orders = Order::with('user', 'items.product')->latest()->paginate(10);
+
+        return response()->json($orders);
     }
 }
