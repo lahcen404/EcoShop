@@ -47,10 +47,18 @@ class AuthController extends Controller
     return response()->json([
         'user' => $user,
         'token' => $token,
-    ], 201); // 201 means "Created"
+    ], 201); 
 }
 
-// logout
+    // profile
+    public function profile(Request $request)
+    {
+        return response()->json([
+            'user' => $request->user()
+        ]);
+    }
+
+    // logout
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();

@@ -3,6 +3,7 @@
 use App\Models\User;
 use App\Enums\UserRole;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\Sanctum;
 
 test('new users can register as a customer', function () {
     $email = 'lahcen.test@example.com';
@@ -53,4 +54,23 @@ test('existing user can login and receive token', function () {
         ->assertJsonPath('user.email', $user->email);
 
     expect($response->json('token'))->not->toBeEmpty();
+});
+
+test('authenticated user can view profile', function () {
+    $user = User::factory()->create([
+        'role' => UserRole::CUSTOMER,
+    ]);
+
+     Sanctum::actingAs($user);
+
+    $response = $this->getJson('/api/profile');
+
+    $response->assertOk()
+        ->assertJsonPath('user.email', $user->email);
+});
+
+test('unauthenticated user cannot view profile', function () {
+    $response = $this->getJson('/api/profile');
+
+    $response->assertUnauthorized();
 });
