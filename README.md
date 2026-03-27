@@ -187,6 +187,8 @@ php artisan test
 
 ---
 
+* Postman Collection : https://yguhijopl.postman.co/workspace/Lahcen-Workspace~1eb868fb-6d1e-4a06-bc89-fca36f6d4f58/collection/undefined?action=share&creator=41299916
+
 ## 👨‍💻 Author
 
 **Lahcen Ait Maskour**
