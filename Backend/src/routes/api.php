@@ -23,7 +23,7 @@ Route::get('/categories/{category}', [CategoryController::class, 'show']);
 
 Route::middleware('auth:sanctum','throttle:api')->group(function () {
     Route::post('/products', [ProductController::class, 'store']);
-    Route::put('/products/{product}', [ProductController::class, 'update']);
+    Route::put('/products/{product}', [ProductController::class, 'update']); 
     Route::delete('/products/{product}', [ProductController::class, 'destroy']);
 
     Route::get('/cart', [CartController::class, 'show']);
