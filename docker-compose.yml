@@ -1,6 +1,4 @@
 services:
-
-
   redis:
     image: redis:alpine
     container_name: ecoshop_redis
@@ -10,7 +8,7 @@ services:
   ecoshop_app:
     build:
       context: ./
-      dockerfile: ./Dockerfile
+      dockerfile: ./Backend/src/Dockerfile 
     container_name: ecoshop_app
     user: "1000:1000"
     volumes:
@@ -20,6 +18,18 @@ services:
     depends_on:
       - postgres
       - redis
+
+  frontend:
+    build:
+      context: ./Frontend 
+      dockerfile: Dockerfile
+    container_name: vue_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./Frontend:/app 
+    depends_on:
+      - ecoshop_app 
 
   nginx:
     image: nginx:alpine
